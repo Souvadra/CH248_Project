@@ -1,4 +1,4 @@
-# Article: Operating principles of circular toggle polygons
+# Topic: Cell Cycle Modelling of Fission Yeast using RACIPE 
 
 # Instruction to the end-user to replicate the results
 
