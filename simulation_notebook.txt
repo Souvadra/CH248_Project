@@ -1,0 +1,40 @@
+The topo file contains the following genes:
+Gene_ID -- Gene_Name
+1 -- Start
+2 -- SK
+3 -- Ste9
+4 -- Rum1
+5 -- Cdc2/Cdc13
+6 -- Cdc2/Cdc13*
+7 -- Wee1/Mik1
+8 -- Cdc25
+9 -- PP
+10 -- Slp1
+-------------------------------------------
+Total number of genes = 10
+Total number of regulations = 27
+-------------------------------------------
+Amplification of the parameter ranges (production rates and thresholds)
+Start   1.000000
+SK      1.000000
+Ste9    1.000000
+Rum1    1.000000
+Cdc2/Cdc13      1.000000
+Cdc2/Cdc13*     10.000000
+Wee1/Mik1       1.000000
+Cdc25   1.000000
+PP      1.000000
+Slp1    1.000000
+100% 12.576639s
+-------------------T_test------------------
+Gene_ID -- Probs_over_T
+1 -- 0.582915
+2 -- 0.461474
+3 -- 0.391960
+4 -- 0.355528
+5 -- 0.553392
+6 -- 0.546064
+7 -- 0.351759
+8 -- 0.454774
+9 -- 0.356784
+10 -- 0.509422
