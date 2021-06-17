@@ -83,5 +83,6 @@ function dydt = dynamic_simulation_fission_yeast_cc_normal(t,y,parameter_set)
     dydt(8) = gh*H_Slp1_PP*H_Slp1_Slp1*H_Slp1_Cdc2byCdc13*H_Slp1_Cdc2byCdc13Star - kh*Slp1;
     dydt(9) = gi*H_Wee1byMik1_Cdc2byCdc13Star - ki*Wee1byMik1;
     dydt(10) = gj*H_Cdc25_Cdc2byCdc13Star - kj*Cdc25;
+    d
 end
 

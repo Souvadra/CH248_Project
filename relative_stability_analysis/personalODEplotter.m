@@ -3,7 +3,7 @@ clear
 path = '../data/fission_yeast_cc_normal/1';
 components_num = 10;
 external_signal = 0;
-sol_num = 1;
+sol_num = 10;
 
 %% Finding the solution files from the given paths
 [topo_file_info, parameter_names] = parameter_generator(path);
@@ -48,10 +48,10 @@ for i=1:size(parameter_values,1)
 end
 
 %% Now its time to solve ans ODE and plot the solutions 
-run_time = 0:1:200; % run time for ode solver
+run_time = 0:1:100; % run time for ode solver
 num_initials = 10; %100;
 
-for ii = 1:2   %size(parameter_sets_for_simulating,1)
+for ii = 1:10   %size(parameter_sets_for_simulating,1)
     ga = parameter_sets_for_simulating.("Prod_of_Start                ")(ii);
     gb = parameter_sets_for_simulating.("Prod_of_SK                   ")(ii);
     gc = parameter_sets_for_simulating.("Prod_of_Ste9                 ")(ii);
@@ -90,9 +90,10 @@ for ii = 1:2   %size(parameter_sets_for_simulating,1)
 
        I = [Startjj SKjj Ste9jj Rum1jj Cdc2byCdc13jj Cdc2byCdc13Starjj Wee1byMik1jj Cdc25jj PPjj Slp1jj];
 
-       [t,y] = ode45(@(t,y)dynamic_simulation_fission_yeast_cc_normal(t,y,parameter_sets_for_simulating(ii,:)),run_time,I);
+       [t,y] = ode45(@(t,y)dynamics_simulation(t,y,parameter_sets_for_simulating(ii,:)),run_time,I);
        plot(t,y); hold on;
    end
+   legend('Start','SK','Ste9','Rum1','Cdc2/Cdc13','Cdc2/Cdc13*','Wee1/Mik1','Cdc25','PP','Slp1');
    hold off
 end
 
