@@ -35,7 +35,7 @@ function dydt = dynamics_simulation(t,y,parameter_set)
     ki = parameter_set.("Deg_of_PP                    ");
     kj = parameter_set.("Deg_of_Slp1                  ");
     
-    H_Start_Start = hill(Start, parameter_set.("Trd_of_StartToStart          "), parameter_set.("Act_of_StartToStart          "), parameter_set.("Num_of_StartToStart          "));
+    H_Start_Start = hill(Start, parameter_set.("Trd_of_StartToStart          "), parameter_set.("Inh_of_StartToStart          "), parameter_set.("Num_of_StartToStart          "));
     H_SK_Start = hill(SK, parameter_set.("Trd_of_SKToSK                "), parameter_set.("Act_of_SKToSK                "), parameter_set.("Num_of_SKToSK                "));
     
     H_Start_SK = hill(Start, parameter_set.("Trd_of_StartToSK             "), parameter_set.("Act_of_StartToSK             "), parameter_set.("Num_of_StartToSK             "));
@@ -61,9 +61,9 @@ function dydt = dynamics_simulation(t,y,parameter_set)
     H_PP_Cdc25 = hill(PP, parameter_set.("Trd_of_PPToCdc25             "), parameter_set.("Inh_of_PPToCdc25             "), parameter_set.("Num_of_PPToCdc25             "));
     
     H_Cdc2byCdc13Star_Slp1 = hill(Cdc2byCdc13Star, parameter_set.("Trd_of_Cdc2/Cdc13*ToSlp1     "), parameter_set.("Act_of_Cdc2/Cdc13*ToSlp1     "), parameter_set.("Num_of_Cdc2/Cdc13*ToSlp1     "));
-    H_Slp1_Slp1 = hill(Slp1, parameter_set.("Trd_of_Slp1ToSlp1            "), parameter_set.("Act_of_Slp1ToSlp1            "), parameter_set.("Num_of_Slp1ToSlp1            "));
+    H_Slp1_Slp1 = hill(Slp1, parameter_set.("Trd_of_Slp1ToSlp1            "), parameter_set.("Inh_of_Slp1ToSlp1            "), parameter_set.("Num_of_Slp1ToSlp1            "));
     
-    H_PP_PP = hill(PP, parameter_set.("Trd_of_PPToPP                "), parameter_set.("Act_of_PPToPP                "), parameter_set.("Num_of_PPToPP                "));
+    H_PP_PP = hill(PP, parameter_set.("Trd_of_PPToPP                "), parameter_set.("Inh_of_PPToPP                "), parameter_set.("Num_of_PPToPP                "));
     H_Slp1_PP = hill(Slp1, parameter_set.("Trd_of_Slp1ToPP              "), parameter_set.("Act_of_Slp1ToPP              "), parameter_set.("Num_of_Slp1ToPP              "));
     
     H_Slp1_Cdc2byCdc13Star = hill(Slp1, parameter_set.("Trd_of_Slp1ToCdc2/Cdc13*     "), parameter_set.("Inh_of_Slp1ToCdc2/Cdc13*     "), parameter_set.("Num_of_Slp1ToCdc2/Cdc13*     "));
