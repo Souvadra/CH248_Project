@@ -118,8 +118,64 @@ that robust features in any gene regulatory network remains conserved against
 large parameter purturbations due to the the restraints from the circuit 
 topology itself. 
 
-The implementation details of RACIPE is as follows:
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=70mm, scale=0.5]{racipe_workflow.png} \\
+  \text{Figure 1: Workflow of RACIPE \cite{RACIPE}}
+\end{figure}
 
+\subsubsection*{Input:} The primary input of this toolbox is the circuit
+topology that is written in a `.topo' file (e.g. ``circuit.topo"). Each line 
+of this file specifies a regulatory link, which contains the source node, 
+target node and mode of interaction (1 for activation, 2 for inhibition).
+Example of a .topo file is shown below.
+\begin{verbatim}
+  Source      Target      Type 
+    A           B           2
+    B           A           2
+\end{verbatim}
+The above .topo file represents a `Toggle Switch' network which is essentially
+two master regulators mutually inhibiting each other.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=20mm, scale=0.5]{toggle_switch_logo.png}
+\end{figure}
+
+\subsubsection*{Process Topology Information:} This process builds 
+the ODEs based on the circuit topology (input). As an example the above circuit 
+will be represented as 
+\begin{align}
+  \frac{dA}{dt} &= G_A H^S (B, B_A^0, n_{BA}, \lambda^{-}_{BA}) - k_A A \notag \\
+  \frac{dB}{dt} &= G_B H^S (A, A_B^0, n_{AB}, \lambda^{-}_{AB}) - k_B B \notag 
+\end{align}
+Where, $A$ and $B$ represents the concentration of the protein $A$ and $B$ as  
+a function of time, $G_A$ and $G_B$ are the maximum production rate of $A$ and 
+$B$. $k_A$ and $k_B$ are the innate degradatino rates of the the corresponding 
+proteins, and $H^S$ is non-linear shifted Hill function defined as
+\begin{align}
+  H^S (B, B_A^0, n_{BA}, \lambda^{-}_{BA}) & \coloneqq  \lambda^{-}_{BA} +
+   \frac{1 -\lambda^{-}_{BA}}{1 + \left( \frac{B}{B_A^0}\right)^{n_{BA}}}
+   \notag
+\end{align} 
+$\lambda^{-}_{BA}$ is the maximum fold change of A caused by inhibitor B. 
+
+When multiple regulators target a gene, the function form of the rate equations 
+assumes that these regulators are independent and hence, the overall production
+rate becomes the product of the innate production rate of the target genes and 
+the shifted Hill functions for all the regulatory links. 
+
+\subsubsection*{Estimatation of parameters:}
+Ranges of the threshold values in the shifted Hill functions are estimated 
+numerically to satisfy the ``half-functoinal'' rule. Most of the other 
+parametes are preset and sampled via a random distribution (which is `uniform 
+distribution' by default). All these parameters are stored in a `.prs' (parameter)
+file (e.g. ``circuit.prs'').
+
+\subsubsection*{Solve the ODE, Identify the stable steady states:} RACIPE 
+repeats the simulates teh coupled ODEs numerically for each sampled parameter
+set for a large number of random initial conditions (optional input to RACIPE) 
+and the steady state solutions for eac parameter set are stored in the output 
+solution files.  
 % ************************************************************************* %
 %                                  THE END                                  %
 % ************************************************************************* %
@@ -128,5 +184,5 @@ The implementation details of RACIPE is as follows:
 % ************************************************************************* %
 \bibliography{citation} 
 \bibliographystyle{abbrv}
-% ************************************************************************* %
+% ************************************************************************* %  
 \end{document} 
