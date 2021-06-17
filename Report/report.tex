@@ -1,0 +1,132 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[]{amsthm} %lets us use \begin{proof}
+\usepackage[]{amssymb} %gives us the character \varnothing
+\usepackage{mathtools}
+\renewcommand{\qedsymbol}{\rule{0.7em}{0.7em}}
+\usepackage{amsmath}
+\usepackage{titlesec} 
+\usepackage{float}
+
+\titleformat{\section}[runin]
+  {\normalfont\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}[runin]
+  {\normalfont\normalsize\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}[runin]
+  {\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+\newcommand{\Int}{\int\limits}
+
+
+\title{Understanding the dynamics of a complex biological network without 
+parameter information: Case study on the cell-cycle network 
+of fission-yeast (\textit{S.pombe})}
+\author{Souvadra Hati (Sr: 15551)}
+\date\today
+%This information doesn't actually show up on your document unless you use the maketitle command below
+
+\begin{document}
+\maketitle %This command prints the title based on information entered above
+
+%Section and subsection automatically number unless you put the asterisk next to them.
+% ************************************************************************* %
+%                              Introduction                                 %
+% ************************************************************************* %
+\section*{Introduction:} Understanding and predicting the dynamics of complex 
+biochemical networks is one of the fundamental goal of Systems Biology. Although,
+even a single cell is way too complex in nature for us to model all its 
+biochemical behaviours using our current understanding and compute capacity,
+scientists have been successful in modelling some of the biochemical pathways
+essentials in every living organism. One of the computationally feasible ways 
+to predict the dynamical behaviours of these networks is to numerically solve a bunch of 
+coupled Ordinary Differential Equations (ODEs) with appropriate kinetic parameters 
+that can be experimentally measured. But that process requires extensive wet-lab
+experiments to find out the vast array of biochemical parameters necessary to 
+model even modests of the biological pathways, which slows down the process of 
+building the models. This has motivated scientists to come up with innovative 
+ideas to be able to gain insight into a biochemical pathway without extensive 
+knowledge of the parameters involved in it. In this article I am going to discuss
+two such ways of modelling a network and show how they can be useful by applying 
+them in the cell-cycle pathway of fission-yeast (\textit{S.pombe}).
+% ************************************************************************* %
+%                             Discrete Method                               %
+% ************************************************************************* %
+\section*{Discrete Method:}
+One of the most simple yet elegant way to model the essentials of a network is
+to model it as a graph model with each protein / regulator can be assumed as 
+a node and the interaction between those regulators as the edges of the graph.
+The edges will only represent the the sign of the relation between those two nodes.
+What I mean, is that the node will only take into account of the fact that 
+the interaction is activating (+1) or inhibiting (-1). After that, in each 
+discrete ieration the state of the the daughter nodes of the initialized nodes 
+(can be themselves as well if self-activation or self-inhibition is present)
+will be updated as per the update rule mentioned below.
+
+\begin{equation*}
+  S_i (t+1) = \begin{cases}
+    0, & \text{if } \sum_{j} a_{ij} S_j(t) < \theta_i\\
+    1, & \text{if } \sum_{j} a_{ij} S_j(t) > \theta_i\\
+    S_i (t), & \text{if } \sum_{j} a_{ij} S_j(t) = \theta_i
+    \end{cases}
+\end{equation*}
+Here, $S_j(t) \in \{0,1\}$ in the binary value assigned to node $j$ at iteration
+$t$, which discretely denotes if the protein is present in the system at that 
+iteration or not. $a_{ij} = 1$ denotes an activating interaction from node j to 
+node i, and similarly $a_{ij}$ denotes an inhibiting edge and $a_{ij} = 0$
+denotes no interaction (no edge between those two nodes). $\theta_{ij}$ is a 
+threshold of activation of node $i$ which is generally $0$, unless otherwise 
+mentioned \cite{boolean_model}.
+
+One interesting aspect of this Boolean modelling is that, we can actually 
+start the model iteration using all the possible initial conditions and that 
+will be in most cases very much computationally feasible. For example, if our 
+network of interest has 7 nodes, then there will be in total $2^7 = 128$, which 
+means we can effectively sample the total solution space of the network which 
+is absolutely not possible in a continuous scenario.
+
+So, in this manner, without any knowledge of the kinetic parameters in the model
+or ever solving any ODE at all, we can gain insight into the dynamics of the model
+as I shall discuss using a case study in the later half of the report.
+% ************************************************************************* %
+%                           Continuous Method                               %
+% ************************************************************************* %
+\section*{Continuous Method:} Although the discrete method in theory can provide
+us a lot of information regarding the network of interest, the harsh reality 
+is that no biological system is actually discrete and introducing even moderate
+amount of realism requires us to write the ODE of the reaction kinetics and solve 
+them numerically to observe the dynamics of the network. But that requires 
+access to the set of kinetic parameters that we are trying to avoid in our 
+modelling paradigm. 
+
+So, to tackle that exact challenge Huang et al. 2018 \cite{RACIPE} published 
+an article on a software that they named ``RACIPE: Random Circuit Perturbation".
+It takes, just like the Boolean method, only the topology of the core regulatory
+circuit and unbiasly generates an ensemble of mathematical models, each of which 
+is characterized by a unique set of kinetic parameters From the ensemble of 
+models, we can analyze the robust dynamical properteis of the core circuit via 
+downstream statistical analysis. In RACIPE, the effects of the "peripheral 
+factors" are modeled as random perturbations to the kinetic parameters. RACIPE
+samples its parameters across a wide range (via some random distribution) 
+keeping the half functional rule (
+which states that each regulatory link has about $50\%$ chance to be activated)
+valid. The RACIPE generated gene-expression data can later be analyzed using 
+differnt statistical tools (primarily Hierarchical clustering analysis (HCA), 
+and Principal Component Analysis (PCA)) to get a holistic view of the dynamical 
+feature of the network. All these are based of the previous studies that says 
+that robust features in any gene regulatory network remains conserved against
+large parameter purturbations due to the the restraints from the circuit 
+topology itself. 
+
+The implementation details of RACIPE is as follows:
+
+% ************************************************************************* %
+%                                  THE END                                  %
+% ************************************************************************* %
+% ************************************************************************* %
+%                                References                                 %
+% ************************************************************************* %
+\bibliography{citation} 
+\bibliographystyle{abbrv}
+% ************************************************************************* %
+\end{document} 
