@@ -60,6 +60,6 @@ than that of standard 10th-stable solutions used otherwise.
     ylabel('Number of the stability states');
     titl = ['Circuit topology: ',name];
     title(titl);
-    saveName = [name,'_stability_state_counts<30>.fig'];
+    saveName = [name,'_stability_state_counts_full.fig'];
     savefig(saveName);
 end

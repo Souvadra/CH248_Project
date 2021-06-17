@@ -31,7 +31,7 @@ ylabel('Percentage Stability States');
 Name = "Circuit topology: "+ string(name);
 title(Name);
 
-savefig(string(name) + "_stability_state_percentage.fig");
+savefig(string(name) + "-stability-state-percentage.fig");
 Name = string(name) + "stability-state-percentage" + ".xls";
 writematrix(output_table,Name)
 end
