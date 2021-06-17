@@ -36,8 +36,8 @@ function dydt = dynamics_simulation(t,y,parameter_set)
     kj = parameter_set.("Deg_of_Slp1                  ");
     
     H_Start_Start = hill(Start, parameter_set.("Trd_of_StartToStart          "), parameter_set.("Inh_of_StartToStart          "), parameter_set.("Num_of_StartToStart          "));
-    H_SK_Start = hill(SK, parameter_set.("Trd_of_SKToSK                "), parameter_set.("Act_of_SKToSK                "), parameter_set.("Num_of_SKToSK                "));
     
+    H_SK_SK = hill(SK, parameter_set.("Trd_of_SKToSK                "), parameter_set.("Inh_of_SKToSK                "), parameter_set.("Num_of_SKToSK                "));
     H_Start_SK = hill(Start, parameter_set.("Trd_of_StartToSK             "), parameter_set.("Act_of_StartToSK             "), parameter_set.("Num_of_StartToSK             "));
     
     H_Cdc2byCdc13Star_Ste9 = hill(Cdc2byCdc13Star, parameter_set.("Trd_of_Cdc2/Cdc13*ToSte9     "), parameter_set.("Inh_of_Cdc2/Cdc13*ToSte9     "), parameter_set.("Num_of_Cdc2/Cdc13*ToSte9     "));
@@ -73,8 +73,8 @@ function dydt = dynamics_simulation(t,y,parameter_set)
     H_Rum1_Cdc2byCdc13Star = hill(Rum1, parameter_set.("Trd_of_Rum1ToCdc2/Cdc13*     "), parameter_set.("Inh_of_Rum1ToCdc2/Cdc13*     "), parameter_set.("Num_of_Rum1ToCdc2/Cdc13*     "));
     
     
-    dydt(1) = ga * H_Start_Start * H_SK_Start - ka*Start;
-    dydt(2) = gb * H_Start_SK - kb*SK;
+    dydt(1) = ga * H_Start_Start - ka*Start;
+    dydt(2) = gb * H_Start_SK * H_SK_SK - kb*SK;
     dydt(3) = gc * H_Cdc2byCdc13Star_Ste9 * H_SK_Ste9 * H_Cdc2byCdc13_Ste9 * H_PP_Ste9 - kc*Ste9;
     dydt(4) = gd * H_SK_Rum1 * H_Cdc2byCdc13_Rum1 * H_Cdc2byCdc13Star_Rum1 * H_PP_Rum1 - kd*Rum1;
     dydt(5) = ge * H_Rum1_Cdc2byCdc13 * H_Ste9_Cdc2byCdc13 * H_Slp1_Cdc2byCdc13 - ke*Cdc2byCdc13;
