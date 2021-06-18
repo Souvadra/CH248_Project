@@ -1,6 +1,4 @@
-# Topic: Cell Cycle Modelling of Fission Yeast using RACIPE 
-
-# Instruction to the end-user to replicate the results
+# Topic: Understanding the dynamics of a complexbiological network without parameterinformation: Case study on the cell-cycle networkof fssion-yeast (*S.pombe*)
 
 ## RACIPE Simulations (Three independent replicates for each network)
 
@@ -87,51 +85,18 @@ example: `make_an_errorbar_conditions_apply('/path_to_RACIPE_simulations/7c/1/7c
 
 **Plotting the Dynamics of the network** 
 
-_Note: This part of the code is not as straight forward as previous ones and requires bit more manual effort from the end-user to be able to run it properly._
+filename: `dynamics_simulation.m`
 
-_Some Naming Conventions_: The naming conventions for the circuits used here are little different from that used in the manuscript and other places. 
-The general pattern is like: 
-- 7c <--> SEVEN 
-- 7cS <--> SEVEN_SA
-- 5c <--> FIVE 
-- 5cS <--> FIVE_SA
-... 
-
-filename: `dynamic_simulation_<circuit name>.m`
-
-These functions are primarily there to build the coupled shifted Hill function required to solve the networks in MATLAB and those results can be plotted to find out the presence of any oscillations and also to find out the relative stability of the individual states in a multi-stable solution (our primary focus in this article was on the relative stability of the corresponding monostable states in the most dominant bistable solution(s)).
-   Hence, the right function (i.e. the function corresponding the right networks, that the user wants to analyze) must be used while doing relative stability analysis or just plotting the results to search for oscillations.
-
-filename: `odecode_relative_stability_<circuit component number>.m`
-
-_This code requires the end user to modify it everytime before running on a different network._
-
-variables to change: 
-1. `path`: path to any of the triplicates of the RACIPE simulation of the network under consideration. e.g. `path_to_the_RACIPE_simulations/SEVEN/3`
-2. `components_num`: Number of components in the network. 
-3. `sol_num`: 2 for bistable solutions, 3 for tristable solutions, ... 
-4. `categories`: Trying to explain this via an example. Suppose you want to calculate the relative frequency of the corresponding mono-stable states in the most common bistable solution in 4c circuit (which is: 611 <--This naming convention derives from the fact that my previous code represents: 0101 as 6 and 1010 as 11, this naming convention and transformatin is clearly mentioned in the output files of the `make_an_errorbar_conditions_apply.m` function). So, we want to know the relative stability of the corresponding states 6 (0101) and 11 (1010) in that bistable solution. For that we have to write `categories = [611 116]`, basically all the possible permutations of 6 and 11, in a vector format.
-   Similarly, for a hypothetical tristable state `234`, we have to write `categories = [234 243 342 324 432 423]` to get the relative stability of the corresponding monostable states. 
-5. `run_time`: `run_time = 0:1:200` generally is enough for the solutions to reach convergence in all the cases, but it can be modified by the end-user as per the need 
-6. `num_initials`: This number indicates how many random initial conditions to generate for this simulations, we have used 1000 initial conditions for all our analysis. 
-
-Now, how exactly the data should be retrieved in the ouput is the choice of the user. I have given four examples, in my Code repository, where in `odecode_relative_stability_4.m` I collected the values of a,b,c,d separately and then chose the solutions where A=1,B=0,C=1,D=0 as state 11 and where A=0,B=1,C=0,D=1 as state 6 for the relative stability plotting. But, for `odecode_relative_stability_2.m, odecode_relative_stability_5.m, odecode_relative_stability_7.m` I wrote the definition of the states inside the code and just stored how many initial conditions converged to which state in each run. 
-
-_User should go through `odecode_relative_stability_<circuit component number>.m` files and tune the output variables as requierd to get the output in a mode that will be easier to analyze later.)_
+These functions are primarily there to build the coupled shifted Hill function required to solve the networks in MATLAB and those results can be plotted to find out the presence of any oscillations and general dynamical time-varying properties of the network.
 
 ---
 
 filename: `personalODEplotter.m`
 
-This code is very similar to the `odecode_relative_stability_<circuit component number>.m` codes. The different is that it plots all the solutions of Shifted Hill simulations with time as x-axis present in the given solution file. This is helpful to visualize if there is any oscillation in any solutions, which could not be done from RACIPE simulation results directl. 
+This code extracts the the sampled RACIPE parameter sets for one of the *N-stable* solutions of RACIPE simulations and plots some of the solutions using Shifted Hill equations with time as x-axis present in the given solution file. This is helpful to visualize if there is any oscillation in any solutions, which could not be done from RACIPE simulation results directly. 
 
 variables to change: 
 1. `path`: path to any of the triplicates of the RACIPE simulation of the network under consideration. e.g. `path_to_the_RACIPE_simulations/TEN_SA/2`
 2. `components_num`: Number of components in the network. 
 3. `sol_num`: 2 for bistable solutions, 3 for tristable solutions, ... 
-
-Note: The current version of the code is for a 10 element toggle polygon, the end-user has to change the code accordingly to use it with any other toggle polygon network.
-
-*IMPORTANT*: It has come to my notice that, the a part of the above two code will be a little different in different versions of MATLAB in cross platform. For example, in some versions `parameter_sets_for_simulating.("Prod_of_A  ")(ii)` has to be written as `parameter_sets_for_simulating.Prod_of_A(ii)`,  `parameter_sets_for_simulating.("Deg_of_A   ")` as `parameter_sets_for_simulating.Deg_of_A(ii)`. This has to looked into by the end user, to find which edition of the MATLAB he/she is using and in which operating system. The same goes for all the `dynamic_simulation_<circuit name>.m` files as well. This is not something very difficult to do, and must be one of the first line of debugging if any random error arises while running these codes. 
-
 ---
