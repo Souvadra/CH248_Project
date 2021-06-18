@@ -13,7 +13,7 @@ Additinal flags were used in special conditions, for those details, refer to "Me
 
 Once the triplicates of the RACIPE simulations are done, we use the following pipelines to analyze the data in different ways.
 
-**Important**: Keep all the triplicates of the RACIPE solutions for a same network in the same directory (preferebly, name the directory as the name of the network). For example Make a directory `/home/user1/4c` and keep the replicate one inside the folder as `/home/user1/4c/1` and same for replicate two and three. 
+**Important**: Keep all the triplicates of the RACIPE solutions for a same network in the same directory (preferebly, name the directory as the name of the network). For example Make a directory `/home/user1/network` and keep the replicate one inside the folder as `/home/user1/network/1` and same for replicate two and three. 
 
 # Code definitions: 
 
@@ -24,10 +24,10 @@ This code performs G/K normalization on all the RACIPE solution files present in
 
 inputs: 
 1. `path`: path where the RACIPE solution files i.e. `*_solution_?.dat` files are stored. 
-2. `components_num`: Number of components in the network. Example: `components_num = 4` for network 4c, 4cS, 
+2. `components_num`: Number of components in the network. Example: `components_num = 10` for cell-cycle network of fission-yeast 
 3. `external_signal`: Always equal to Zero for all the analysis we have performed in this article. Hence, `external_signal = 0`
 
-Example: `GK_normalization("path_to_RACIPE_simulations/4c/2",4,0)`
+Example: `GK_normalization("path_to_RACIPE_simulations/network/2",10,0)`
 
 ***
 
@@ -59,29 +59,15 @@ inputs:
 1. `p1`: path of the first replicate of the RACIPE simulation of the concerned network 
 2. `p2`: path of the second replicate of the RACIPE simulation of the concerned network 
 3. `p3`: path of the third replicate of the RACIPE simulation of the concerned network 
-4. `name`: `<name>_stability_state_counts<30>` is the name of the .fig file it generates as output. [Note, this code does not generate a separate .xls file, although the .fig file can be used to extract the mean and standard deviation data using standard MATLAB functions]
+4. `name`: `<name>_stability_state_counts_full` is the name of the .fig file it generates as output. [Note, this code does not generate a separate .xls file, although the .fig file can be used to extract the mean and standard deviation data using standard MATLAB functions]
 
 Example: `universal_stability_state_counter('path_to_larger_RACIPE_simulations/7cS/1','path_to_larger_RACIPE_simulations/7cS/2','path_to_larger_RACIPE_simulations/7cS/3','7cS')`
 
 ***
 
 **Frequency Calculations**
-filename: `allSolutionCombiner.m`
-
-This function takes all the solution files of a RACIPE simulation, starting from the monostable solution to the highest-stable solution present in the directory, and merge those to form a combined solution files, which mimic that of a mono-stable solution file, but containes solution from all the stability states. The output of this file is a .dat file, which is printed in the same directory. Basically, this function makes a solutions file, which mimics that of a Boolean solution file, for the same network, for further downstream analysis. This output file(.dat) also requires G/K normalization for further analysis. 
-
-inputs:
-
-1. `path`: path where the RACIPE solution files i.e. `*_solution_?.dat` files are stored.
-2. `components_num`: Number of components in the network.
-3. `Name`: the name of the ouput .dat file. 
-
-example: `allSolutionFileCombiner('path_to_RACIPE_simulations/9cS/2/', 9, '9cS_combined')`
-
----
-
 filenames: 
-   Main Function: `make_an_errorbar_conditions_apply.m`
+   Main Function: `state_freq_calculator.m`
    Helper Function: `err_bar_maker.m`
 
 Main Function: This function reads the solution files, mentioned in the inputs and output the average frequency and the standard deviation across all the triplicates of the different solution states in that solution file. The output result is stored in a .xls file, which can be later analysed using Microsoft Excel. 
@@ -99,68 +85,7 @@ inputs:
 
 example: `make_an_errorbar_conditions_apply('/path_to_RACIPE_simulations/7c/1/7c_solution_gk_10.dat','/path_to_RACIPE_simulations/7c/2/7c_solution_gk_10.dat', '/path_to_RACIPE_simulations/7c/3/7c_solution_gk_10.dat', 10, 7, 0, 0,'7c_deca_stable')`
 
----
-
-filenames: 
-   Main Function: `most_common_odd_mono_state_finder.m`
-   Helper Function: `err_bar_maker.m`
-
-Main Function: ONLY WORKS WITH ODD-NUMBERED TOGGLE POLYGON NETWORKS. It reads all the monostable solution files from each of the triplicates of the RACIPE simulations and make a .xls file that states the relative frequency of all the dominant monostable states compared to the rest of the states in the monostable solution.
-
-inputs: 
-
-1. `p1`: path of the monostable state solution file in the first replicate of the RACIPE simulation of the concerned network 
-2. `p2`: path of the monostable state solution file in the the second replicate of the RACIPE simulation of the concerned network 
-3. `p3`: path of the monostable state solution file in the the third replicate of the RACIPE simulation of the concerned network 
-4. `components_num`: Number of components in the network. 
-5. `name`: Name of the output .xls file. 
-
-example: `most_common_odd_mono_state_finder('path_to_RACIPE_simulations/9c/1/9c_solution_gk_1.dat','path_to_RACIPE_simulations/9c/2/9c_solution_gk_1.dat', 'path_to_RACIPE_simulations/9c/3/9c_solution_gk_1.dat', 9,'9c_mono_common')
-
----
-
-filenames: 
-   Main Function: `most_common_odd_bi_state_finder.m`
-   Helper Function: `err_bar_maker.m`
-
-Main Function: ONLY WORKS WITH ODD-NUMBERED TOGGLE POLYGON NETWORKS. It reads all the bistable solution files from each of the triplicates of the RACIPE simulations and make a .xls file that states the relative frequency of the all the bistable states generated via some combination of the dominant monostable states compared to the rest of the states in the bistable solution.
-
-inputs:
-
-1. `p1`: path of the bistable state solution file in the first replicate of the RACIPE simulation of the concerned network 
-2. `p2`: path of the bistable state solution file in the the second replicate of the RACIPE simulation of the concerned network 
-3. `p3`: path of the bistable state solution file in the the third replicate of the RACIPE simulation of the concerned network 
-4. `components_num`: Number of components in the network. 
-5. `name`: Name of the output .xls file. 
-
-
-example: `most_common_odd_bi_state_finder('path_to_RACIPE_simulations/9c/1/9c_solution_gk_2.dat','path_to_RACIPE_simulations/9c/2/9c_solution_gk_2.dat', 'path_to_RACIPE_simulations/9c/3/9c_solution_gk_2.dat', 9,'9c_bi_common')`
-
----
-
-**JSD (Jensen-Shannon Divergence) Calculations**
-
-filename: `CombinedcsvGen.m`
-
-This function takes the frequency distribution of the combined results of the RACIPE and Boolean simulations and make a combined matrix that displays the predicted frequencies of each solution states as per RACIPE and Boolean simulations. This output matrix is saved as a .csv file, which we are going to use later for calculation of the JSD of those two distributions. 
-
-inputs:
-
-1. `pathRacipe`: path to the combined frequency distribution file generated after analysing the RACIPE simulation data 
-2. `pathBoolean`: path to the combined frequency distribution file generated in Boolean simulation
-4. `name`: Name of the output .csv file.
-
-example: `CombinedcsvGen('RACIPE/3c_combined.csv','Boolean/Boolean_freq_3c.csv','3c_RACIPE_plus_Boolean')`
-
---- 
-
-filename: `JSD-operation.ipynb`
-
-This is a very small Jupyter Notebook script that prompts the user to input the frequency distrubtion of the combined RACIPE simulation and then the frequency distribution of the Boolean simulation. Then it calculates the JSD between the two distributions to find out how much similar those distrubutions are. The input data that the program prompts for can be manually copy-pasted in the terminal (when it prompts for it) from the output .csv file of the `CombinedcsvGen.m` function. 
-
----
-
-**Relative Stability Analysis** 
+**Plotting the Dynamics of the network** 
 
 _Note: This part of the code is not as straight forward as previous ones and requires bit more manual effort from the end-user to be able to run it properly._
 
@@ -210,55 +135,3 @@ Note: The current version of the code is for a 10 element toggle polygon, the en
 *IMPORTANT*: It has come to my notice that, the a part of the above two code will be a little different in different versions of MATLAB in cross platform. For example, in some versions `parameter_sets_for_simulating.("Prod_of_A  ")(ii)` has to be written as `parameter_sets_for_simulating.Prod_of_A(ii)`,  `parameter_sets_for_simulating.("Deg_of_A   ")` as `parameter_sets_for_simulating.Deg_of_A(ii)`. This has to looked into by the end user, to find which edition of the MATLAB he/she is using and in which operating system. The same goes for all the `dynamic_simulation_<circuit name>.m` files as well. This is not something very difficult to do, and must be one of the first line of debugging if any random error arises while running these codes. 
 
 ---
-
-filename: `rel_stability_hist_plotting.m`
-
-This performs the plotting of the relative stability of the different monostable states that make a bistable states. For this file to run properly, the matrix generated by the `dynamic_simulation_<circuit name>.m` file has to be loaded manually. 
-
----
----
-# Pipelines used 
-
-
-## Figure 2: Even numbered networks 
-
-`RACIPE --> allSolutionFileCombiner.m --> GK_normalization --> make_and_errorbar_conditions_apply --> Choose top 5/6 dominant states in Microsoft Excel and plot the bar-chart `
-
-`RACIPE --> allSolutionFileCombiner.m --> GK_normalization --> make_and_errorbar_conditions_apply --> A`   
-`Boolean solution file --> B`     
-`A + B -->CombinedcsvGen.m --> JSD-operation.ipynb --> JSD values `     
-
-
-## Figure 3: A and B
-
-`RACIPE --> GK_normalization --> MakeStabilityStateCounter.m --> Plot the data in Microsoft Excel and plot the bar-chart `
-
-## Figure 3: C
-
-`RACIPE --> allSolutionFileCombiner.m --> GK_normalization --> make_and_errorbar_conditions_apply --> Choose top 3 most dominant states in Microsoft Excel and plot the stacked bar-chart. `
-
-
-## Figure 4
-
-`RACIPE --> parameter and solution files ---> odecode_relative_stability_<circuit component number>.m --> rel_stability_hist_plotting.m` 
-
-The function `rel_stability_his_plotting.m` prints the percentage of the bistable solutions, which fall inside the [0,0.045)U(0.965,1.00] range (i.e. the effective monostable solutions). Those can be copy pasted inside an Excel Sheet and then used to plot the bar-chart of *Fig. 4-D* 
-
-## Figure 5: Odd numbered networks 
-
-`RACIPE --> allSolutionFileCombiner.m --> GK_normalization --> make_and_errorbar_conditions_apply --> Choose top (n*2) dominant states in Microsoft Excel and plot the bar-chart ` n = number of components in the circuit 
-
-`(RACIPE --> allSolutionFileCombiner.m --> GK_normalization --> make_and_errorbar_conditions_apply) + Boolean solution file --> CombinedcsvGen.m --> JSD-operation.ipynb --> JSD values `
-
-## Figure 6: A
-
-`RACIPE --> GK_normalization --> MakeStabilityStateCounter.m --> Plot the data in Microsoft Excel and plot the bar-chart `
-
-## Figure 6: B and C
-
-`RACIPE --> allSolutionFileCombiner.m --> GK_normalization --> most_common_odd_mono_stable_finder.m --> Open the .xls file in Microsoft Excel and plot it`
-
-`RACIPE --> allSolutionFileCombiner.m --> GK_normalization --> most_common_odd_bi_stable_finder.m --> Open the .xls file in Microsoft Excel and plot it`
-
-## Figure 8:
-Refer to the sRACIPE section. 
