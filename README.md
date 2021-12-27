@@ -1,4 +1,4 @@
-# Topic: Understanding the dynamics of a complex biological networks without parameter information: Case study on the cell-cycle networkof fossion-yeast (*S.pombe*)
+# Topic: Understanding the dynamics of a complex biological networks without parameter information: Case study on the cell-cycle networkof fission-yeast (*S.pombe*)
 
 ## RACIPE Simulations (Three independent replicates for each network)
 
